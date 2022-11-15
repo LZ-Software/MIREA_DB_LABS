@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS contact_info
     id SERIAL PRIMARY KEY NOT NULL UNIQUE,
     person_id INTEGER REFERENCES person(id) ON DELETE CASCADE NOT NULL,
     contact VARCHAR(50) NOT NULL UNIQUE,
-    type contact_enum NOT NULL
+    contact_type contact_enum NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS roles
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS task_type
     title VARCHAR(25) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS contract
+CREATE TABLE IF NOT EXISTS contracts
 (
     id SERIAL PRIMARY KEY NOT NULL UNIQUE,
     extra_data json NOT NULL
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS tasks
     contact_id INTEGER REFERENCES person(id) ON DELETE CASCADE NOT NULL,
     author_id INTEGER REFERENCES person(id) ON DELETE NO ACTION NOT NULL,
     executor_id INTEGER REFERENCES person(id) ON DELETE NO ACTION NOT NULL,
-    contract_id INTEGER REFERENCES contract(id) ON DELETE CASCADE NULL,
+    contract_id INTEGER REFERENCES contracts(id) ON DELETE CASCADE NULL,
     task_type_id INTEGER REFERENCES task_type(id) ON DELETE NO ACTION NULL,
     priority_id priority_enum NOT NULL,
     data VARCHAR(256) NULL,
