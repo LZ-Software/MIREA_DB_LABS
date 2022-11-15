@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS tasks
     executor_id INTEGER REFERENCES person(id) ON DELETE NO ACTION NOT NULL,
     contract_id INTEGER REFERENCES contracts(id) ON DELETE CASCADE NULL,
     task_type_id INTEGER REFERENCES task_type(id) ON DELETE NO ACTION NULL,
-    priority_id priority_enum NOT NULL,
+    priority priority_enum NOT NULL,
     data VARCHAR(256) NULL,
     dt_created TIMESTAMP NOT NULL,
     dt_finished TIMESTAMP NULL,
