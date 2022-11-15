@@ -1,0 +1,38 @@
+CREATE DATABASE mirea;
+
+CREATE TYPE contact_type AS ENUM ('email', 'phone', 'address');
+
+CREATE TABLE IF NOT EXISTS person
+(
+    id SERIAL PRIMARY KEY NOT NULL UNIQUE,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS contact_info
+(
+    id SERIAL PRIMARY KEY NOT NULL UNIQUE,
+    person_id INTEGER REFERENCES person (id) NOT NULL,
+    contact VARCHAR(50) NOT NULL UNIQUE,
+    type contact_type NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS role
+(
+    id SERIAL PRIMARY KEY NOT NULL UNIQUE,
+    title VARCHAR(15) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS person_role
+(
+    id SERIAL PRIMARY KEY NOT NULL UNIQUE,
+    person_id INTEGER REFERENCES person (id) NOT NULL UNIQUE,
+    role_id INTEGER REFERENCES role (id) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS organization
+(
+    id SERIAL PRIMARY KEY NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    person_id INTEGER REFERENCES person (id) NOT NULL UNIQUE
+);
