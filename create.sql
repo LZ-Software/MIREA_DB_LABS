@@ -7,29 +7,29 @@ CREATE TABLE IF NOT EXISTS user_login
 (
     id SERIAL PRIMARY KEY NOT NULL,
     username VARCHAR(20) NOT NULL UNIQUE,
-    password VARCHAR(50) NOT NULL
+    password VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS person
 (
     id SERIAL PRIMARY KEY NOT NULL UNIQUE,
     user_id INTEGER REFERENCES user_login(id) ON DELETE CASCADE NOT NULL UNIQUE,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL
+    first_name VARCHAR(128) NOT NULL,
+    last_name VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS contact_info
 (
     id SERIAL PRIMARY KEY NOT NULL UNIQUE,
     person_id INTEGER REFERENCES person(id) ON DELETE CASCADE NOT NULL,
-    contact VARCHAR(50) NOT NULL UNIQUE,
+    contact VARCHAR(128) NOT NULL UNIQUE,
     contact_type contact_enum NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS roles
 (
     id SERIAL PRIMARY KEY NOT NULL UNIQUE,
-    title VARCHAR(15) NOT NULL UNIQUE
+    title VARCHAR(20) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS person_role
@@ -42,14 +42,14 @@ CREATE TABLE IF NOT EXISTS person_role
 CREATE TABLE IF NOT EXISTS organization
 (
     id SERIAL PRIMARY KEY NOT NULL UNIQUE,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(128) NOT NULL UNIQUE,
     person_id INTEGER REFERENCES person(id) ON DELETE CASCADE NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS task_type
 (
     id SERIAL PRIMARY KEY NOT NULL UNIQUE,
-    title VARCHAR(25) NOT NULL UNIQUE
+    title VARCHAR(128) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS contracts
@@ -72,3 +72,49 @@ CREATE TABLE IF NOT EXISTS tasks
     dt_finished TIMESTAMP NULL,
     dt_deadline TIMESTAMP NULL
 );
+
+CREATE FUNCTION get_login_id_by_login(name VARCHAR)
+    RETURNS INTEGER
+    LANGUAGE plpgsql AS
+    $func$
+    DECLARE ret INTEGER;
+    BEGIN
+       SELECT id INTO ret FROM user_login WHERE username = name;
+       RETURN ret;
+    END
+    $func$;
+
+CREATE FUNCTION get_person_id_by_login(name VARCHAR)
+    RETURNS INTEGER
+    LANGUAGE plpgsql AS
+    $func$
+    DECLARE ret INTEGER;
+    BEGIN
+       SELECT P.id INTO ret FROM user_login ul
+       INNER JOIN person p ON ul.id = p.user_id
+       WHERE ul.username = name;
+       RETURN ret;
+    END
+    $func$;
+
+CREATE FUNCTION get_role_id(name VARCHAR)
+    RETURNS INTEGER
+    LANGUAGE plpgsql AS
+    $func$
+    DECLARE ret INTEGER;
+    BEGIN
+       SELECT id INTO ret FROM roles WHERE title = name;
+       RETURN ret;
+    END
+    $func$;
+
+CREATE FUNCTION get_task_type_id(name VARCHAR)
+    RETURNS INTEGER
+    LANGUAGE plpgsql AS
+    $func$
+    DECLARE ret INTEGER;
+    BEGIN
+       SELECT id INTO ret FROM task_type WHERE title = name;
+       RETURN ret;
+    END
+    $func$;
