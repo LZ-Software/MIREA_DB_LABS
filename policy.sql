@@ -31,8 +31,8 @@ USING (
 
 CREATE POLICY select_for_managers ON business.tasks FOR SELECT TO manager
 USING (
-    (SELECT title FROM business.roles WHERE roles.id = (SELECT role_id FROM business.person_role
-    WHERE person_id = tasks.author_id) = 'Сотрудник')
+    ((SELECT title FROM business.roles WHERE roles.id = (SELECT role_id FROM business.person_role
+    WHERE person_id = tasks.author_id)) = 'Сотрудник')
     );
 
 CREATE POLICY access_all ON business.tasks FOR ALL TO administrator USING (true) WITH CHECK (true);

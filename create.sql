@@ -1,7 +1,7 @@
 DROP SCHEMA IF EXISTS business CASCADE;
 DROP DATABASE IF EXISTS mirea;
-CREATE DATABASE mirea;
 
+CREATE DATABASE mirea;
 CREATE SCHEMA business;
 
 CREATE TYPE business.contact_enum AS ENUM ('email', 'телефон', 'адрес');
