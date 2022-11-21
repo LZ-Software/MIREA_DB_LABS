@@ -10,44 +10,44 @@ GRANT ALL ON ALL TABLES IN SCHEMA business TO administrator;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA business TO administrator;
 GRANT ALL ON ALL PROCEDURES IN SCHEMA business TO administrator;
 
-ALTER TABLE business.tasks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 
-GRANT SELECT ON business.contracts, business.tasks, business.contact_info, business.task_type, business.person,
-    business.organization TO manager, worker;
+GRANT SELECT ON contracts, tasks, contact_info, task_type, person,
+    organization TO manager, worker;
 
-GRANT INSERT ON business.tasks, business.contact_info, business.contracts, business.person, business.organization
+GRANT INSERT ON tasks, contact_info, contracts, person, organization
     TO manager;
 
-GRANT UPDATE ON business.tasks, business.contact_info, business.contracts, business.person, business.organization
+GRANT UPDATE ON tasks, contact_info, contracts, person, organization
     TO manager;
 
-GRANT UPDATE(dt_finished, priority) ON business.tasks TO worker;
+GRANT UPDATE(dt_finished, priority) ON tasks TO worker;
 
-CREATE POLICY select_tasks ON business.tasks FOR SELECT TO manager, worker
+CREATE POLICY select_tasks ON tasks FOR SELECT TO manager, worker
 USING
 (
-    (SELECT username FROM business.user_login WHERE user_login.id = tasks.author_id) = current_user
+    (SELECT username FROM user_login WHERE user_login.id = tasks.author_id) = current_user
         OR
-    (SELECT username FROM business.user_login WHERE user_login.id = tasks.executor_id) = current_user
+    (SELECT username FROM user_login WHERE user_login.id = tasks.executor_id) = current_user
 );
 
-CREATE POLICY select_for_managers ON business.tasks FOR SELECT TO manager
+CREATE POLICY select_for_managers ON tasks FOR SELECT TO manager
 USING
 (
-    (SELECT title FROM business.roles WHERE roles.id = (SELECT role_id FROM business.person_role WHERE person_id = tasks.author_id)) = 'Сотрудник'
+    (SELECT title FROM roles WHERE roles.id = (SELECT role_id FROM person_role WHERE person_id = tasks.author_id)) = 'Сотрудник'
 );
 
-CREATE POLICY access_all ON business.tasks FOR ALL TO administrator
+CREATE POLICY access_all ON tasks FOR ALL TO administrator
 USING (true) WITH CHECK (true);
 
-CREATE POLICY insert_task ON business.tasks FOR INSERT TO manager
+CREATE POLICY insert_task ON tasks FOR INSERT TO manager
 WITH CHECK (true);
 
-CREATE POLICY update_task ON business.tasks FOR UPDATE TO manager
-USING (true) WITH CHECK(tasks.dt_finished IS NULL AND ((SELECT username FROM business.user_login WHERE user_login.id = author_id) = current_user));
+CREATE POLICY update_task ON tasks FOR UPDATE TO manager
+USING (true) WITH CHECK(tasks.dt_finished IS NULL AND ((SELECT username FROM user_login WHERE user_login.id = author_id) = current_user));
 
-CREATE POLICY update_state ON business.tasks FOR UPDATE TO manager, worker
+CREATE POLICY update_state ON tasks FOR UPDATE TO manager, worker
 USING (dt_finished IS NULL) WITH CHECK((dt_finished IS NOT NULL)
-    AND ((SELECT username FROM business.user_login WHERE user_login.id = author_id) = current_user
-    OR (SELECT username FROM business.user_login WHERE user_login.id = executor_id) = current_user)
+    AND ((SELECT username FROM user_login WHERE user_login.id = author_id) = current_user
+    OR (SELECT username FROM user_login WHERE user_login.id = executor_id) = current_user)
     );
