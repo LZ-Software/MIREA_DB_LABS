@@ -1,11 +1,11 @@
-INSERT INTO roles(title)
+INSERT INTO business.roles(title)
     VALUES
         ('Администратор'),
         ('Менеджер'),
         ('Сотрудник'),
         ('Клиент');
 
-INSERT INTO user_login(username, password)
+INSERT INTO business.user_login(username, password)
     VALUES
         ('admin', sha256('mj4ir9^*&$gdhfb87&#(*b')),
         ('manager1', sha256('f6$*86%^&*$fgyu^*&^*%!')),
@@ -17,7 +17,7 @@ INSERT INTO user_login(username, password)
         ('client3', sha256('nyBY&G^&V67f^%^FE^&F#6digf6')),
         ('client4', sha256('67v56DC%^*#^&f56f5C84g7v8b'));
 
-INSERT INTO person(user_id, first_name, last_name)
+INSERT INTO business.person(user_id, first_name, last_name)
     VALUES
         (get_login_id_by_login('admin'), 'Билли', 'Херингтон'),
         (get_login_id_by_login('manager1'), 'Тодд', 'Говард'),
@@ -29,7 +29,7 @@ INSERT INTO person(user_id, first_name, last_name)
         (get_login_id_by_login('client3'), 'Рулон', 'Обоев'),
         (get_login_id_by_login('client4'), 'Ушат', 'Помоев');
 
-INSERT INTO person_role(person_id, role_id)
+INSERT INTO business.person_role(person_id, role_id)
     VALUES
         (get_person_id_by_login('admin'), get_role_id('Администратор')),
         (get_person_id_by_login('manager1'), get_role_id('Менеджер')),
@@ -41,7 +41,7 @@ INSERT INTO person_role(person_id, role_id)
         (get_person_id_by_login('client3'), get_role_id('Клиент')),
         (get_person_id_by_login('client4'), get_role_id('Клиент'));
 
-INSERT INTO contact_info(person_id, contact, contact_type)
+INSERT INTO business.contact_info(person_id, contact, contact_type)
     VALUES
         (get_person_id_by_login('admin'), '+77777777777', 'телефон'),
         (get_person_id_by_login('admin'), 'master@dungeon.com', 'email'),
@@ -66,14 +66,14 @@ INSERT INTO contact_info(person_id, contact, contact_type)
         (get_person_id_by_login('client4'), '247021, Калининградская область, город Орехово-Зуево, въезд Будапештсткая, 77', 'адрес'),
         (get_person_id_by_login('client4'), '+79008683644', 'телефон');
 
-INSERT INTO organization(name, person_id)
+INSERT INTO business.organization(name, person_id)
     VALUES
         ('Dungeon Inc.', get_person_id_by_login('client1')),
         ('Umbrella Corp.', get_person_id_by_login('client2')),
         ('Gym Inc.', get_person_id_by_login('client3')),
         ('LZ Software', get_person_id_by_login('client4'));
 
-INSERT INTO task_type(title)
+INSERT INTO business.task_type(title)
     VALUES
         ('Отправка оборудования'),
         ('Ремонт оборудования'),
@@ -82,7 +82,7 @@ INSERT INTO task_type(title)
         ('Диагностика'),
         ('Встреча с клиентом');
 
-INSERT INTO contracts(extra_data)
+INSERT INTO business.contracts(extra_data)
     VALUES
         ('{"Серийный номер": "ZM9RM646873865783", "Производитель": "Toshiba", "Окончание гарантии": "01-01-2023"}'),
         ('{"Серийный номер": "VT6ED019075942003", "Производитель": "Bosch", "Точка назначения": "Метро Румянцево, KFC"}'),
@@ -90,7 +90,7 @@ INSERT INTO contracts(extra_data)
         ('{"Серийный номер": "VL1EX420482601375", "Производитель": "Samsung", "Окончание гарантии": "01-05-2022"}'),
         ('{"Серийный номер": "XS5LE011324719550", "Производитель": "Huawei"}');
 
-INSERT INTO tasks(contact_id, author_id, executor_id, contract_id, task_type_id, priority, data, dt_created, dt_finished, dt_deadline)
+INSERT INTO business.tasks(contact_id, author_id, executor_id, contract_id, task_type_id, priority, data, dt_created, dt_finished, dt_deadline)
     VALUES
         (get_person_id_by_login('client1'),
          get_person_id_by_login('manager1'),
