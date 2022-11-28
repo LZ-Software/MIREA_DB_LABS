@@ -41,6 +41,7 @@
                     if ($login == $u and $pass == $p)
                     {
                         echo "<p class='element' id='success'>Авторизован</p>";
+                        header("Location: menu.php");
                         break;
                     }
                     else

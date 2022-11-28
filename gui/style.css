@@ -8,6 +8,16 @@ body {
     text-align: center;
     min-height: 100vh;
 }
+.data_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+td, th {
+    border: 2px solid black;
+    padding: 10px;
+}
 .element {
     display: block;
     margin: 5px;
