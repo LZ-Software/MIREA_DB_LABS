@@ -45,30 +45,27 @@ SELECT id, dt_created, dt_finished, dt_deadline FROM tasks WHERE executor_id = g
 
 CREATE OR REPLACE PROCEDURE generate_json_report()
 AS $$ BEGIN
+    EXECUTE format('');
     COPY (SELECT to_jsonb(json_agg(json_tasks)) FROM (SELECT * FROM tasks) as json_tasks) TO 'C:/Users/Public/report.json';
 END;
 $$ LANGUAGE plpgsql;
 
 
-create function make_report(path TEXT) RETURNS void
+CREATE OR REPLACE PROCEDURE generate_report(path TEXT)
 AS $$ DECLARE
 statement TEXT;
 BEGIN
-statement := format('copy(select json_agg(task) ::TEXT from
-(select task. task_id, task.creation_date, task. deadline_date,
-task_status.status_name, task.description, employee. full_name from task join task_status on task. status_id = task_status.status_id join employee on employee employee_id = task.executor_id) as task) TO **8s/tasks.json'';', path);
+statement := format('copy(select json_agg(task) ::TEXT from (SELECT tsk.id, contact.username, author.username, executor.username, cont.extra_data, t.title, tsk.priority, tsk.data, tsk.dt_created, tsk.dt_finished, tsk.dt_deadline FROM tasks tsk
+    JOIN user_login contact ON tsk.contact_id = contact.id
+    JOIN user_login author ON tsk.author_id = author.id
+    JOIN user_login executor ON tsk.executor_id = executor.id
+    LEFT JOIN contracts cont ON tsk.contract_id = cont.id
+    JOIN task_type t ON tsk.task_type_id = t.id) as task) TO %L', path);
 EXECUTE statement;
 RETURN;
 END; $$
 LANGUAGE plpgsql;
 
-
-SELECT tsk.id, c.username, a.username, e.username, cont.extra_data, t.title, tsk.priority, tsk.data, tsk.dt_created, tsk.dt_finished, tsk.dt_deadline FROM tasks tsk
-    JOIN user_login c ON tsk.contact_id = c.id
-    JOIN user_login a ON tsk.author_id = a.id
-    JOIN user_login e ON tsk.executor_id = e.id
-    JOIN contracts cont ON tsk.contract_id = cont.id
-    JOIN task_type t ON tsk.task_type_id = t.id;
+CALL generate_report('C:/Users/Public/report.json');
 
 
-CALL generate_json_report();
