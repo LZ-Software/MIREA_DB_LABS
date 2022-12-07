@@ -13,9 +13,18 @@ namespace Pracrice_7_8.Forms
 {
     public partial class frmMain : DevExpress.XtraEditors.XtraForm
     {
-        public frmMain()
+        private string role;
+
+        public frmMain(string role)
         {
             InitializeComponent();
+
+            this.role = role;
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            MessageBox.Show(this.role, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

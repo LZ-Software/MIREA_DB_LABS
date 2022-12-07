@@ -32,15 +32,20 @@ namespace Pracrice_7_8
             cmd.Parameters.AddWithValue(login);
             cmd.Parameters.AddWithValue(password);
 
-            cmd.CommandText = "SELECT * FROM user_login WHERE username = $1 AND password = $2";
+            cmd.CommandText = "SELECT r.name FROM user_login ul JOIN person_role pr ON pr.id = ul.id JOIN roles r ON pr.id = r.id WHERE ul.username = $1 AND ul.password = $2";
 
             using (NpgsqlDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.HasRows)
                 {
-                    frmMain main = new frmMain();
-                    main.Show();
-                    this.Hide();
+                    while (reader.Read())
+                    {
+                        string role = reader.GetString(reader.GetOrdinal("name"));
+
+                        frmMain main = new frmMain(role);
+                        main.Show();
+                        this.Hide();
+                    }
                 }
                 else
                 {

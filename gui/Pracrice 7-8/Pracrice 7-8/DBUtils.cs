@@ -11,5 +11,13 @@ namespace Pracrice_7_8
 
             return connection;
         }
+
+        public static NpgsqlConnection GetDBConnection(string login)
+        {
+            NpgsqlConnection connection = DBServerUtils.GetDBConnection(login, "");
+            connection.Open();
+
+            return connection;
+        }
     }
 }
