@@ -99,7 +99,6 @@ namespace Pracrice_7_8
             this.Name = "frmAuth";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Авторизация";
-            this.Load += new System.EventHandler(this.frmAuth_Load);
             ((System.ComponentModel.ISupportInitialize)(this.loginText.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.passwordText.Properties)).EndInit();
             this.ResumeLayout(false);

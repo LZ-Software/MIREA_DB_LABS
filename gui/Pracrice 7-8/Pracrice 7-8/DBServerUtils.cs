@@ -1,10 +1,4 @@
 ﻿using Npgsql;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pracrice_7_8
 {
@@ -12,7 +6,7 @@ namespace Pracrice_7_8
     {
         public static NpgsqlConnection GetDBConnection(string username, string password)
         {
-            string connString = $"Host=localhost;Username={username};Password={password};Database=mirea";
+            string connString = $"Host=localhost;Username={username};Password={password};Database=mirea;Port=5432";
 
             NpgsqlConnection conn = new NpgsqlConnection(connString);
 
