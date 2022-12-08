@@ -20,11 +20,11 @@ namespace Pracrice_7_8.Forms
             InitializeComponent();
 
             this.role = role;
-        }
 
-        private void frmMain_Load(object sender, EventArgs e)
-        {
-            MessageBox.Show(this.role, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            gridView1.AddNewRow();
+            var a = gridView1.GetRow(0);
+            gridView1.SetRowCellValue(0, "id", 1);
+
         }
     }
 }
