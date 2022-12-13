@@ -69,3 +69,36 @@ LANGUAGE plpgsql;
 CALL generate_report('C:/Users/Public/report.json');
 
 
+CREATE OR REPLACE FUNCTION find_client(word_1 VARCHAR(50))
+RETURNS TABLE (
+client_id INTEGER,
+client_username VARCHAR(20),
+client_name VARCHAR(128),
+client_surname VARCHAR(128),
+client_phone VARCHAR(128),
+client_email VARCHAR(128),
+client_address VARCHAR(128),
+client_org VARCHAR(128))
+AS $body$
+BEGIN
+    RETURN QUERY
+    SELECT p.id as ID, ul.username,p.first_name, p.last_name, cft.contact as Phone, cfe.contact as Email, cfa.contact as Address, org.name as Organization FROM person p
+    JOIN user_login ul ON p.user_id = ul.id
+    JOIN person_role pr ON p.id = pr.person_id AND pr.role_id = 4
+    LEFT JOIN contact_info cft ON p.id = cft.person_id AND cft.contact_type = 'телефон'
+    LEFT JOIN contact_info cfe ON p.id = cfe.person_id AND cfe.contact_type = 'email'
+    LEFT JOIN contact_info cfa ON p.id = cfa.person_id AND cfa.contact_type = 'адрес'
+    JOIN organization org on p.id = org.person_id
+    WHERE ul.username = word_1
+       OR p.first_name = word_1
+       OR p.last_name = word_1
+       OR cft.contact = word_1
+       OR cfe.contact = word_1
+       OR cfa.contact = word_1;
+
+END;
+$body$ LANGUAGE plpgsql;
+
+SELECT * FROM find_client('kyra.conn@gmail.com');
+
+DROP FUNCTION find_client(word_1 VARCHAR(50));

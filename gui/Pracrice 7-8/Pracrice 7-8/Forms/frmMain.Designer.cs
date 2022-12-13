@@ -192,6 +192,7 @@ namespace Pracrice_7_8.Forms
             this.searchClientButton.Size = new System.Drawing.Size(206, 47);
             this.searchClientButton.TabIndex = 1;
             this.searchClientButton.Text = "Найти клиента";
+            this.searchClientButton.Click += new System.EventHandler(this.searchClientButton_Click);
             // 
             // createTaskButton
             // 

@@ -163,5 +163,11 @@ namespace Pracrice_7_8.Forms
         {
 
         }
+
+        private void searchClientButton_Click(object sender, EventArgs e)
+        {
+            frmSearchClient searchClient = new frmSearchClient();
+            searchClient.ShowDialog();
+        }
     }
 }
