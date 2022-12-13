@@ -14,14 +14,12 @@ namespace Pracrice_7_8.Forms
 {
     public partial class frmEditTask : DevExpress.XtraEditors.XtraForm
     {
-        private string role;
         private int id;
 
         public frmEditTask(string role, int id)
         {
             InitializeComponent();
 
-            this.role = role;
             this.id = id;
         }
 

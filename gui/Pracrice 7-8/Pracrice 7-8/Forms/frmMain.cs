@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Pracrice_7_8.Forms;
 
 namespace Pracrice_7_8.Forms
 {
@@ -150,6 +151,17 @@ namespace Pracrice_7_8.Forms
                 frmEditTask editTask = new frmEditTask(role, (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value);
                 editTask.ShowDialog();
             }
+        }
+
+        private void createTaskButton_Click(object sender, EventArgs e)
+        {
+            frmAddTask frmAddTask = new frmAddTask(this.login);
+            frmAddTask.ShowDialog();
+        }
+
+        private void registerButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

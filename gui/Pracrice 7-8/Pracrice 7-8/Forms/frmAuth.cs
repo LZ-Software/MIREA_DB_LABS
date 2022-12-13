@@ -24,18 +24,27 @@ namespace Pracrice_7_8
 
         private void authButton_Click(object sender, EventArgs e)
         {
+            string login = this.loginText.Text.Trim();
+            string password = this.passwordText.Text.Trim();
+            string password_hashed = Hash.ComputeSHA256(password).ToLower();
+
+            DBUtils.role = login;
+            DBUtils.password = password;
+
             NpgsqlConnection connection = DBUtils.GetDBConnection();
 
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = connection;
 
-            string login = this.loginText.Text.Trim();
-            string password = Hash.ComputeSHA256(this.passwordText.Text.Trim()).ToLower();
-
             cmd.Parameters.AddWithValue(login);
-            cmd.Parameters.AddWithValue(password);
+            cmd.Parameters.AddWithValue(password_hashed);
 
-            cmd.CommandText = "SELECT r.title FROM user_login ul JOIN person_role pr ON pr.id = ul.id JOIN roles r ON pr.id = r.id WHERE ul.username = $1 AND ul.password = $2";
+            cmd.CommandText = "SELECT " +
+                "r.title " +
+                "FROM user_login ul " +
+                "JOIN person_role pr ON pr.id = ul.id " +
+                "JOIN roles r ON pr.id = r.id " +
+                "WHERE ul.username = $1 AND ul.password = $2";
 
             using (NpgsqlDataReader reader = cmd.ExecuteReader())
             {
