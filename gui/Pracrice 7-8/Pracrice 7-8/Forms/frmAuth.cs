@@ -17,6 +17,9 @@ namespace Pracrice_7_8
         {
             InitializeComponent();
             this.Icon = Properties.Resources.appIcon;
+
+            this.loginText.Text = "manager1";
+            this.passwordText.Text = "f6$*86%^&*$fgyu^*&^*%!";
         }
 
         private void authButton_Click(object sender, EventArgs e)
@@ -32,7 +35,7 @@ namespace Pracrice_7_8
             cmd.Parameters.AddWithValue(login);
             cmd.Parameters.AddWithValue(password);
 
-            cmd.CommandText = "SELECT r.name FROM user_login ul JOIN person_role pr ON pr.id = ul.id JOIN roles r ON pr.id = r.id WHERE ul.username = $1 AND ul.password = $2";
+            cmd.CommandText = "SELECT r.title FROM user_login ul JOIN person_role pr ON pr.id = ul.id JOIN roles r ON pr.id = r.id WHERE ul.username = $1 AND ul.password = $2";
 
             using (NpgsqlDataReader reader = cmd.ExecuteReader())
             {
@@ -40,9 +43,9 @@ namespace Pracrice_7_8
                 {
                     while (reader.Read())
                     {
-                        string role = reader.GetString(reader.GetOrdinal("name"));
+                        string role = reader.GetString(reader.GetOrdinal("title"));
 
-                        frmMain main = new frmMain(role);
+                        frmMain main = new frmMain(role, login);
                         main.Show();
                         this.Hide();
                     }

@@ -15,12 +15,14 @@ namespace Pracrice_7_8.Forms
     public partial class frmEditTask : DevExpress.XtraEditors.XtraForm
     {
         private string role;
+        private int id;
 
-        public frmEditTask(string role)
+        public frmEditTask(string role, int id)
         {
             InitializeComponent();
 
             this.role = role;
+            this.id = id;
         }
 
         private void loadExecutor(ComboBox comboBox)
@@ -143,6 +145,7 @@ namespace Pracrice_7_8.Forms
 
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = connection;
+            cmd.Parameters.AddWithValue(id);
 
             cmd.CommandText = "SELECT " +
                 "contact.username as Клиент," + // +
@@ -161,7 +164,7 @@ namespace Pracrice_7_8.Forms
                 "JOIN user_login executor ON tsk.executor_id = executor.id " +
                 "LEFT JOIN contracts cont ON tsk.contract_id = cont.id " +
                 "JOIN task_type t ON tsk.task_type_id = t.id " +
-                "WHERE tsk.id = 1";
+                "WHERE tsk.id = $1";
 
             using (NpgsqlDataReader reader = cmd.ExecuteReader())
             {
@@ -174,7 +177,15 @@ namespace Pracrice_7_8.Forms
                         string client = reader.GetString(reader.GetOrdinal("Клиент"));
                         string priority = reader.GetString(reader.GetOrdinal("Приоритет"));
                         string type = reader.GetString(reader.GetOrdinal("Тип"));
-                        string info = reader.GetString(reader.GetOrdinal("Инфо"));
+                        string info;
+                        if(reader.IsDBNull(reader.GetOrdinal("Инфо")))
+                        {
+                            info = "";
+                        }
+                        else
+                        {
+                            info = reader.GetString(reader.GetOrdinal("Инфо"));
+                        }
                         string problem;
                         if (reader.IsDBNull(reader.GetOrdinal("Проблема")))
                         {

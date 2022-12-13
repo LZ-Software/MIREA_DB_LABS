@@ -25,6 +25,8 @@ namespace Pracrice_7_8
                     hash += $"{b:X2}";
                 }
             }
+            hash = hash.Insert(0, @"\");
+            hash = hash.Insert(1, "x");
 
             return hash;
         }

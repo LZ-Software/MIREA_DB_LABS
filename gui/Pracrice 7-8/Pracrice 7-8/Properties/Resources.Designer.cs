@@ -69,5 +69,15 @@ namespace Pracrice_7_8.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] controlIco {
+            get {
+                object obj = ResourceManager.GetObject("controlIco", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

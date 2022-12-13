@@ -6,7 +6,7 @@ namespace Pracrice_7_8
     {
         public static NpgsqlConnection GetDBConnection()
         {
-            NpgsqlConnection connection = DBServerUtils.GetDBConnection("postgres", ""); // Пароль ввести
+            NpgsqlConnection connection = DBServerUtils.GetDBConnection("manager1", "123456"); // Пароль ввести
             connection.Open();
 
             return connection;

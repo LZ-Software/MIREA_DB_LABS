@@ -170,6 +170,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="API_icon-icons.com_53706.ico" />
+    <None Include="Resources\control.svg" />
+    <None Include="Resources\control.png" />
     <None Include="Resources\API_icon-icons.com_53706.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
