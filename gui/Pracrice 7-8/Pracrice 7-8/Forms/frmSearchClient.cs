@@ -33,7 +33,7 @@ namespace Pracrice_7_8.Forms
                 "FROM person p " +
                 "JOIN user_login ul ON p.user_id = ul.id " +
                 "JOIN person_role pr ON p.id = pr.person_id AND pr.role_id = 4 " +
-                "JOIN contact_info cft ON p.id = cft.person_id AND cft.contact_type = 'телефон' " +
+                "LEFT JOIN contact_info cft ON p.id = cft.person_id AND cft.contact_type = 'телефон' " +
                 "LEFT JOIN contact_info cfe ON p.id = cfe.person_id AND cfe.contact_type = 'email' " +
                 "LEFT JOIN contact_info cfa ON p.id = cfa.person_id AND cfa.contact_type = 'адрес' " +
                 "JOIN organization org on p.id = org.person_id";
@@ -66,6 +66,10 @@ namespace Pracrice_7_8.Forms
                     dt.Load(reader);
                     dataGridView1.DataSource = dt;
                 }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 connection.Dispose();
                 connection.Close();
             }
@@ -79,6 +83,10 @@ namespace Pracrice_7_8.Forms
                     DataTable dt = new DataTable();
                     dt.Load(reader);
                     dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 connection.Dispose();
                 connection.Close();
@@ -94,6 +102,10 @@ namespace Pracrice_7_8.Forms
                     dt.Load(reader);
                     dataGridView1.DataSource = dt;
                 }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 connection.Dispose();
                 connection.Close();
             }
@@ -107,6 +119,169 @@ namespace Pracrice_7_8.Forms
                     DataTable dt = new DataTable();
                     dt.Load(reader);
                     dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                connection.Dispose();
+                connection.Close();
+            }
+            else if(!String.IsNullOrEmpty(nameText.Text) && !String.IsNullOrEmpty(lastnameText.Text) && !String.IsNullOrEmpty(organizationText.Text))
+            {
+                cmd.Parameters.AddWithValue(nameText.Text);
+                cmd.Parameters.AddWithValue(lastnameText.Text);
+                cmd.Parameters.AddWithValue(organizationText.Text);
+                cmd.CommandText = "SELECT p.id as ID, ul.username,p.first_name, p.last_name, cft.contact as Phone, cfe.contact as Email, cfa.contact as Address, org.name as Organization FROM person p " +
+                    "JOIN user_login ul ON p.user_id = ul.id " +
+                    "JOIN person_role pr ON p.id = pr.person_id AND pr.role_id = 4 " +
+                    "LEFT JOIN contact_info cft ON p.id = cft.person_id AND cft.contact_type = 'телефон' " +
+                    "LEFT JOIN contact_info cfe ON p.id = cfe.person_id AND cfe.contact_type = 'email' " +
+                    "LEFT JOIN contact_info cfa ON p.id = cfa.person_id AND cfa.contact_type = 'адрес' " +
+                    "JOIN organization org on p.id = org.person_id WHERE p.first_name = $1 AND p.last_name = $2 AND org.name = $3";
+
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                connection.Dispose();
+                connection.Close();
+            }
+            else if (!String.IsNullOrEmpty(nameText.Text) && !String.IsNullOrEmpty(lastnameText.Text))
+            {
+                cmd.Parameters.AddWithValue(nameText.Text);
+                cmd.Parameters.AddWithValue(lastnameText.Text);
+                cmd.CommandText = "SELECT p.id as ID, ul.username,p.first_name, p.last_name, cft.contact as Phone, cfe.contact as Email, cfa.contact as Address, org.name as Organization FROM person p " +
+                    "JOIN user_login ul ON p.user_id = ul.id " +
+                    "JOIN person_role pr ON p.id = pr.person_id AND pr.role_id = 4 " +
+                    "LEFT JOIN contact_info cft ON p.id = cft.person_id AND cft.contact_type = 'телефон' " +
+                    "LEFT JOIN contact_info cfe ON p.id = cfe.person_id AND cfe.contact_type = 'email' " +
+                    "LEFT JOIN contact_info cfa ON p.id = cfa.person_id AND cfa.contact_type = 'адрес' " +
+                    "JOIN organization org on p.id = org.person_id WHERE p.first_name = $1 AND p.last_name = $2";
+
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                connection.Dispose();
+                connection.Close();
+            }
+            else if(!String.IsNullOrEmpty(nameText.Text) && String.IsNullOrEmpty(lastnameText.Text) && String.IsNullOrEmpty(organizationText.Text))
+            {
+                cmd.Parameters.AddWithValue(nameText.Text);
+                cmd.CommandText = "SELECT * FROM find_client($1); ";
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                connection.Dispose();
+                connection.Close();
+            }
+            else if(!String.IsNullOrEmpty(lastnameText.Text) && String.IsNullOrEmpty(lastnameText.Text) && String.IsNullOrEmpty(organizationText.Text))
+            {
+                cmd.Parameters.AddWithValue(lastnameText.Text);
+                cmd.CommandText = "SELECT * FROM find_client($1); ";
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                connection.Dispose();
+                connection.Close();
+            }
+            else if(!String.IsNullOrEmpty(organizationText.Text) && String.IsNullOrEmpty(lastnameText.Text) && String.IsNullOrEmpty(organizationText.Text))
+            {
+                cmd.Parameters.AddWithValue(organizationText.Text);
+                cmd.CommandText = "SELECT * FROM find_client($1); ";
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                connection.Dispose();
+                connection.Close();
+            }
+            else if (!String.IsNullOrEmpty(organizationText.Text) && String.IsNullOrEmpty(lastnameText.Text) && !String.IsNullOrEmpty(nameText.Text))
+            {
+                cmd.Parameters.AddWithValue(nameText.Text);
+                cmd.Parameters.AddWithValue(organizationText.Text);
+                cmd.CommandText = "SELECT p.id as ID, ul.username,p.first_name, p.last_name, cft.contact as Phone, cfe.contact as Email, cfa.contact as Address, org.name as Organization FROM person p " +
+                    "JOIN user_login ul ON p.user_id = ul.id " +
+                    "JOIN person_role pr ON p.id = pr.person_id AND pr.role_id = 4 " +
+                    "LEFT JOIN contact_info cft ON p.id = cft.person_id AND cft.contact_type = 'телефон' " +
+                    "LEFT JOIN contact_info cfe ON p.id = cfe.person_id AND cfe.contact_type = 'email' " +
+                    "LEFT JOIN contact_info cfa ON p.id = cfa.person_id AND cfa.contact_type = 'адрес' " +
+                    "JOIN organization org on p.id = org.person_id WHERE p.first_name = $1 AND org.name = $2";
+
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                connection.Dispose();
+                connection.Close();
+            }
+            else if (!String.IsNullOrEmpty(organizationText.Text) && String.IsNullOrEmpty(nameText.Text) && !String.IsNullOrEmpty(lastnameText.Text))
+            {
+                cmd.Parameters.AddWithValue(lastnameText.Text);
+                cmd.Parameters.AddWithValue(organizationText.Text);
+                cmd.CommandText = "SELECT p.id as ID, ul.username,p.first_name, p.last_name, cft.contact as Phone, cfe.contact as Email, cfa.contact as Address, org.name as Organization FROM person p " +
+                    "JOIN user_login ul ON p.user_id = ul.id " +
+                    "JOIN person_role pr ON p.id = pr.person_id AND pr.role_id = 4 " +
+                    "LEFT JOIN contact_info cft ON p.id = cft.person_id AND cft.contact_type = 'телефон' " +
+                    "LEFT JOIN contact_info cfe ON p.id = cfe.person_id AND cfe.contact_type = 'email' " +
+                    "LEFT JOIN contact_info cfa ON p.id = cfa.person_id AND cfa.contact_type = 'адрес' " +
+                    "JOIN organization org on p.id = org.person_id WHERE p.last_name = $1 AND org.name = $2";
+
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 connection.Dispose();
                 connection.Close();
