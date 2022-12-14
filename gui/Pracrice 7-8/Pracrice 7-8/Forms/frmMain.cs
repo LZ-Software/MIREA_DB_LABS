@@ -78,6 +78,9 @@ namespace Pracrice_7_8.Forms
 
         private void loadTable()
         {
+            this.dataGridView1.Rows.Clear();
+            this.dataGridView1.Refresh();
+
             NpgsqlConnection connection = DBUtils.GetDBConnection();
 
             NpgsqlCommand cmd_name = new NpgsqlCommand();
@@ -157,6 +160,7 @@ namespace Pracrice_7_8.Forms
         {
             frmAddTask frmAddTask = new frmAddTask(this.login);
             frmAddTask.ShowDialog();
+            loadTable();
         }
 
         private void registerButton_Click(object sender, EventArgs e)
@@ -168,6 +172,12 @@ namespace Pracrice_7_8.Forms
         {
             frmSearchClient searchClient = new frmSearchClient();
             searchClient.ShowDialog();
+            loadTable();
+        }
+
+        private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

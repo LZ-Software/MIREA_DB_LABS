@@ -1,4 +1,5 @@
 ﻿/*using DevExpress.XtraEditors;*/
+using Newtonsoft.Json.Linq;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -157,6 +158,7 @@ namespace Pracrice_7_8.Forms
             executorLabel.Dock = DockStyle.Fill;
             executorLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ComboBox executorCombobox = new ComboBox();
+            executorCombobox.Name = "executorCombobox";
             loadExecutor(executorCombobox);
             executorCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
             executorCombobox.Dock = DockStyle.Fill;
@@ -168,6 +170,7 @@ namespace Pracrice_7_8.Forms
             clientLabel.Dock = DockStyle.Fill;
             clientLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ComboBox clientCombobox = new ComboBox();
+            clientCombobox.Name = "clientCombobox";
             loadClient(clientCombobox);
             clientCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
             clientCombobox.Dock = DockStyle.Fill;
@@ -179,6 +182,7 @@ namespace Pracrice_7_8.Forms
             priorityLabel.Dock = DockStyle.Fill;
             priorityLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ComboBox priorityCombobox = new ComboBox();
+            priorityCombobox.Name = "priorityCombobox";
             loadPriority(priorityCombobox);
             priorityCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
             priorityCombobox.Dock = DockStyle.Fill;
@@ -190,6 +194,7 @@ namespace Pracrice_7_8.Forms
             typeLabel.Dock = DockStyle.Fill;
             typeLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ComboBox typeCombobox = new ComboBox();
+            typeCombobox.Name = "typeCombobox";
             loadType(typeCombobox);
             typeCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
             typeCombobox.Dock = DockStyle.Fill;
@@ -201,6 +206,7 @@ namespace Pracrice_7_8.Forms
             infoLabel.Dock = DockStyle.Fill;
             infoLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             RichTextBox infoTextbox = new RichTextBox();
+            infoTextbox.Name = "infoTextbox";
             infoTextbox.WordWrap = true;
             infoTextbox.Dock = DockStyle.Fill;
             infoTextbox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -211,6 +217,7 @@ namespace Pracrice_7_8.Forms
             problemLabel.Dock = DockStyle.Fill;
             problemLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             TextBox problemTextbox = new TextBox();
+            problemTextbox.Name = "problemTextbox";
             problemTextbox.Dock = DockStyle.Fill;
             problemTextbox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
@@ -220,6 +227,7 @@ namespace Pracrice_7_8.Forms
             deadlineLabel.Dock = DockStyle.Fill;
             deadlineLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             DateTimePicker deadlineDateTimePicker = new DateTimePicker();
+            deadlineDateTimePicker.Name = "deadlineDateTimePicker";
             deadlineDateTimePicker.Dock = DockStyle.Fill;
             deadlineDateTimePicker.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
@@ -258,12 +266,15 @@ namespace Pracrice_7_8.Forms
 
             int author_id = (int) cmd0.ExecuteScalar();
 
-            string data = ((RichTextBox) this.Controls.Find("infoTextbox", false).FirstOrDefault()).Text;
-            object contract_id = null;
+            TableLayoutPanel table = (TableLayoutPanel) this.Controls.Find("table", false).FirstOrDefault();
+
+            string data = ((RichTextBox) table.Controls.Find("infoTextbox", false).FirstOrDefault()).Text;
+
+            object contract_id = DBNull.Value;
             if (data.Length > 0)
             {
                 NpgsqlCommand cmd1 = new NpgsqlCommand(
-                "INSERT INTO contracts (extra_data) VALUES ($1) RETURNING id",
+                "INSERT INTO contracts (extra_data) VALUES (($1)::jsonb) RETURNING id",
                 connection,
                 transaction);
 
@@ -289,25 +300,28 @@ namespace Pracrice_7_8.Forms
                     "$3, " +
                     "$4, " +
                     "$5, " +
-                    "$6, " +
+                    "$6::priority_enum, " +
                     "$7, " +
                     "now()::timestamp, " +
                     "$8)",
                 connection,
                 transaction);
 
-            cmd2.Parameters.AddWithValue(this.clients[((ComboBox) this.Controls.Find("clientCombobox", false).FirstOrDefault()).SelectedText]); // contact_id
+            cmd2.Parameters.AddWithValue(this.clients[((ComboBox)table.Controls.Find("clientCombobox", false).FirstOrDefault()).SelectedItem.ToString()]); // contact_id
             cmd2.Parameters.AddWithValue(author_id); // author_id
-            cmd2.Parameters.AddWithValue(this.executors[((ComboBox) this.Controls.Find("executorCombobox", false).FirstOrDefault()).SelectedText]); // executor_id
+            cmd2.Parameters.AddWithValue(this.executors[((ComboBox) table.Controls.Find("executorCombobox", false).FirstOrDefault()).SelectedItem.ToString()]); // executor_id
             cmd2.Parameters.AddWithValue(contract_id); // contact_id
-            cmd2.Parameters.AddWithValue(this.types[((ComboBox) this.Controls.Find("typeCombobox", false).FirstOrDefault()).SelectedText]); // task_type_id
-            cmd2.Parameters.AddWithValue(((ComboBox) this.Controls.Find("priorityCombobox", false).FirstOrDefault()).SelectedText); // priority
-            cmd2.Parameters.AddWithValue(((TextBox) this.Controls.Find("problemTextbox", false).FirstOrDefault()).Text); // data
-            cmd2.Parameters.AddWithValue(((DateTimePicker) this.Controls.Find("deadlineDateTimePicker", false).FirstOrDefault()).Value); // dt_deadline
+            cmd2.Parameters.AddWithValue(this.types[((ComboBox) table.Controls.Find("typeCombobox", false).FirstOrDefault()).SelectedItem.ToString()]); // task_type_id
+            cmd2.Parameters.AddWithValue(((ComboBox) table.Controls.Find("priorityCombobox", false).FirstOrDefault()).SelectedItem.ToString()); // priority
+            cmd2.Parameters.AddWithValue(((TextBox) table.Controls.Find("problemTextbox", false).FirstOrDefault()).Text); // data
+            cmd2.Parameters.AddWithValue(((DateTimePicker) table.Controls.Find("deadlineDateTimePicker", false).FirstOrDefault()).Value); // dt_deadline
 
             cmd2.ExecuteNonQuery();
 
             transaction.Commit();
+
+            MessageBox.Show("Задача добавлена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();
         }
     }
 }
