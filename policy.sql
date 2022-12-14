@@ -16,7 +16,7 @@ ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 GRANT SELECT ON contracts, tasks, contact_info, task_type, person,
     organization, user_login, person_role, roles TO manager, worker;
 
-GRANT ALL ON All Sequences In Schema public TO manager;
+GRANT ALL ON All Sequences In Schema public TO manager, worker;
 
 GRANT INSERT ON tasks, contact_info, contracts, person, organization
     TO manager;
