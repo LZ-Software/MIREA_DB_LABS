@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION create_report(worker INTEGER, start_date DATE, end_date DATE)
-RETURNS TABLE (total_count INTEGER, finished_in_time INTEGER, finished_late INTEGER, not_finished INTEGER, not_finished_overdue INTEGER)
+RETURNS TABLE (Количество INTEGER, Завершено INTEGER, "Завершено с опозданием" INTEGER, "Не завершено" INTEGER, Просрочено INTEGER)
 AS $body$
 DECLARE
     total_count INTEGER;
@@ -40,6 +40,8 @@ LANGUAGE plpgsql;
 SELECT * FROM create_report(get_person_id_by_login('worker1'), (current_date - INTERVAL '23 days')::DATE, (current_date + INTERVAL '2 days')::DATE);
 
 SELECT id, dt_created, dt_finished, dt_deadline FROM tasks WHERE executor_id = get_person_id_by_login('worker1');
+
+DROP FUNCTION create_report(worker INTEGER, start_date DATE, end_date DATE);
 
 \copy (SELECT * FROM create_report(get_person_id_by_login('worker1'), (current_date - INTERVAL '23 days')::DATE, (current_date)::DATE)) TO '/home/plmr0/kek.csv' DELIMITER ',' CSV HEADER
 
