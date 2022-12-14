@@ -9,11 +9,14 @@ CREATE ROLE administrator WITH LOGIN ENCRYPTED PASSWORD 'dungeon_master69';
 GRANT ALL ON ALL TABLES IN SCHEMA public TO administrator;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA public TO administrator;
 GRANT ALL ON ALL PROCEDURES IN SCHEMA public TO administrator;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public to administrator;
 
 ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 
 GRANT SELECT ON contracts, tasks, contact_info, task_type, person,
     organization, user_login, person_role, roles TO manager, worker;
+
+GRANT ALL ON All Sequences In Schema public TO manager;
 
 GRANT INSERT ON tasks, contact_info, contracts, person, organization
     TO manager;
