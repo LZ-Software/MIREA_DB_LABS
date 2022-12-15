@@ -173,7 +173,8 @@ namespace Pracrice_7_8.Forms
 
         private void registerButton_Click(object sender, EventArgs e)
         {
-
+            frmRegister register = new frmRegister();
+            register.ShowDialog();
         }
 
         private void searchClientButton_Click(object sender, EventArgs e)

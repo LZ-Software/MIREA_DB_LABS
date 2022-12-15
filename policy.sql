@@ -6,6 +6,7 @@ CREATE ROLE manager;
 CREATE ROLE worker;
 CREATE ROLE administrator WITH LOGIN ENCRYPTED PASSWORD 'dungeon_master69';
 
+GRANT USAGE ON SCHEMA public to administrator;
 GRANT ALL ON ALL TABLES IN SCHEMA public TO administrator;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA public TO administrator;
 GRANT ALL ON ALL PROCEDURES IN SCHEMA public TO administrator;

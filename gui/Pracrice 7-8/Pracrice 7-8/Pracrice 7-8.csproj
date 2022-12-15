@@ -141,6 +141,18 @@
     <Compile Include="Forms\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmRegister.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmRegister.Designer.cs">
+      <DependentUpon>frmRegister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmReport.Designer.cs">
+      <DependentUpon>frmReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmSearchClient.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,6 +179,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmRegister.resx">
+      <DependentUpon>frmRegister.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmReport.resx">
+      <DependentUpon>frmReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSearchClient.resx">
       <DependentUpon>frmSearchClient.cs</DependentUpon>
