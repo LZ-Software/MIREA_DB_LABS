@@ -537,19 +537,29 @@ namespace Pracrice_7_8.Forms
             cmd2.Parameters.AddWithValue(((DateTimePicker) table.Controls.Find("deadlineDateTimePicker", false).FirstOrDefault()).Value); // dt_deadline
             cmd2.Parameters.AddWithValue(this.task_id);
 
-            if (cmd2.ExecuteNonQuery() != -1)
+            try
             {
-                transaction.Commit();
-                MessageBox.Show("Задача обновлена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (cmd2.ExecuteNonQuery() != -1)
+                {
+                    transaction.Commit();
+                    MessageBox.Show("Задача обновлена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Задача не обновлена.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    transaction.Rollback();
+                    transaction.Dispose();
+                    return;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Задача не обновлена.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Задача не обновлена.\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 transaction.Rollback();
                 transaction.Dispose();
                 return;
             }
-            
+
             this.Close();
         }
     }

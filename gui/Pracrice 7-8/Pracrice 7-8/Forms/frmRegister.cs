@@ -1,13 +1,6 @@
 ﻿using DevExpress.XtraEditors;
 using Npgsql;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Pracrice_7_8.Forms
@@ -68,7 +61,15 @@ namespace Pracrice_7_8.Forms
 
                 cmd.CommandText = "CALL create_worker($1, $2, $3, $4, $5, $6, $7, $8)";
 
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Пользователь не добавлен.\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
             else
             {

@@ -309,12 +309,19 @@ namespace Pracrice_7_8.Forms
             cmd2.Parameters.AddWithValue(((TextBox) table.Controls.Find("problemTextbox", false).FirstOrDefault()).Text); // data
             cmd2.Parameters.AddWithValue(((DateTimePicker) table.Controls.Find("deadlineDateTimePicker", false).FirstOrDefault()).Value); // dt_deadline
 
-            cmd2.ExecuteNonQuery();
-
-            transaction.Commit();
-
-            MessageBox.Show("Задача добавлена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            this.Close();
+            try
+            {
+                cmd2.ExecuteNonQuery();
+                transaction.Commit();
+                MessageBox.Show("Задача добавлена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка.\n{ex.Message}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                transaction.Rollback();
+                transaction.Dispose();
+            }
         }
     }
 }

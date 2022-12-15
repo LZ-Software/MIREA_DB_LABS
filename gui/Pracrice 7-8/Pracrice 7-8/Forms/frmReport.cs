@@ -1,13 +1,6 @@
-﻿using DevExpress.XtraEditors;
-using Npgsql;
+﻿using Npgsql;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Pracrice_7_8.Forms
@@ -40,17 +33,25 @@ namespace Pracrice_7_8.Forms
 
                 cmd.CommandText = "SELECT * FROM create_tasks_report($1::DATE, $2::DATE)";
 
-                NpgsqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows)
+                try
                 {
-                    treeList1.ClearNodes();
-                    DataTable dt = new DataTable();
-                    dt.Load(reader);
-                    treeList1.DataSource = dt;
-                }
-                connection.Dispose();
-                connection.Close();
+                    NpgsqlDataReader reader = cmd.ExecuteReader();
 
+                    if (reader.HasRows)
+                    {
+                        treeList1.ClearNodes();
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        treeList1.DataSource = dt;
+                    }
+
+                    connection.Dispose();
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Не удалось получить отчет.\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
