@@ -24,6 +24,8 @@ GRANT INSERT ON tasks, contact_info, contracts, person, organization
 GRANT UPDATE ON tasks, contact_info, contracts, person, organization
     TO manager;
 
+GRANT DELETE ON contracts to manager, worker;
+
 GRANT UPDATE(dt_finished, priority) ON tasks TO worker;
 
 CREATE POLICY select_tasks ON tasks FOR SELECT TO manager, worker
