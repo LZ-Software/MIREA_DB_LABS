@@ -69,7 +69,7 @@ namespace Pracrice_7_8.Forms
             this.Controls.Add(this.table);
             this.Name = "frmAddTask";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmEditTask";
+            this.Text = "Добавление задания";
             this.Load += new System.EventHandler(this.frmEditTask_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
