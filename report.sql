@@ -141,3 +141,36 @@ $body$ LANGUAGE plpgsql;
 SELECT * FROM find_client('kyra.conn@gmail.com');
 
 DROP FUNCTION find_client(word_1 VARCHAR(50));
+
+CREATE OR REPLACE PROCEDURE create_worker(login VARCHAR(128), password_text VARCHAR(256), name VARCHAR(128), last_name_text VARCHAR(128), role VARCHAR(20), email VARCHAR(128), phone VARCHAR(128), address VARCHAR(128))
+AS $$
+DECLARE
+BEGIN
+    IF(SELECT COUNT(*) FROM user_login WHERE username = login) THEN
+        RAISE EXCEPTION 'Такой пользователь уже существует';
+    ELSE
+        INSERT INTO user_login(username, password) VALUES (login, sha256(password_text));
+        INSERT INTO person(user_id, first_name, last_name) VALUES (get_login_id_by_login(login), name, last_name_text);
+        INSERT INTO person_role(person_id, role_id) VALUES (get_person_id_by_login(login), get_role_id(role));
+        INSERT INTO contact_info(person_id, contact, contact_type) VALUES
+        (get_person_id_by_login(login), email, 'email'),
+        (get_person_id_by_login(login), phone, 'телефон'),
+        (get_person_id_by_login(login), address, 'адрес');
+        CREATE ROLE login WITH PASSWORD 'password_text';
+        IF(role = 'Администратор') THEN
+            GRANT postgeres TO login;
+        END IF;
+        IF(role = 'Менеджер') THEN
+            GRANT manager TO login;
+        END IF;
+        IF(role = 'Сотрудник') THEN
+            GRANT worker TO login;
+        END IF;
+            COMMIT;
+    END IF;
+END;
+$$LANGUAGE plpgsql;
+
+DROP PROCEDURE create_worker(login varchar, password_text varchar, name varchar, last_name_text varchar, role varchar, email varchar, phone varchar, address varchar);
+
+CALL create_worker('manager5', '70335656', 'Юрий', 'Хованский', 'Сотрудник', 'hovanskyi228@gmail.com', '+7772281337', 'улица Пушкинаб 69');
