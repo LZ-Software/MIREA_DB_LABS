@@ -149,7 +149,7 @@ namespace Pracrice_7_8.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "frmReport";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmReport";
+            this.Text = "Отчет по заданиям";
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);

@@ -32,20 +32,20 @@ namespace Pracrice_7_8.Forms
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.employeeLabel = new DevExpress.XtraEditors.LabelControl();
             this.comboBox = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.startDate = new DevExpress.XtraEditors.DateEdit();
+            this.endDate = new DevExpress.XtraEditors.DateEdit();
             this.reportButton = new DevExpress.XtraEditors.SimpleButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.pdfButton = new DevExpress.XtraEditors.SimpleButton();
-            this.startDate = new DevExpress.XtraEditors.DateEdit();
-            this.endDate = new DevExpress.XtraEditors.DateEdit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboBox.Properties)).BeginInit();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.treeList1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.startDate.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.startDate.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.endDate.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.endDate.Properties)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.treeList1)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -90,6 +90,34 @@ namespace Pracrice_7_8.Forms
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.comboBox.Size = new System.Drawing.Size(265, 38);
             this.comboBox.TabIndex = 1;
+            // 
+            // startDate
+            // 
+            this.startDate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.startDate.EditValue = null;
+            this.startDate.Location = new System.Drawing.Point(3, 47);
+            this.startDate.Name = "startDate";
+            this.startDate.Properties.AutoHeight = false;
+            this.startDate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.startDate.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.startDate.Size = new System.Drawing.Size(265, 39);
+            this.startDate.TabIndex = 2;
+            // 
+            // endDate
+            // 
+            this.endDate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.endDate.EditValue = null;
+            this.endDate.Location = new System.Drawing.Point(274, 47);
+            this.endDate.Name = "endDate";
+            this.endDate.Properties.AutoHeight = false;
+            this.endDate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.endDate.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.endDate.Size = new System.Drawing.Size(265, 39);
+            this.endDate.TabIndex = 3;
             // 
             // reportButton
             // 
@@ -138,34 +166,6 @@ namespace Pracrice_7_8.Forms
             this.pdfButton.Text = "Выгрузить в pdf";
             this.pdfButton.Click += new System.EventHandler(this.pdfButton_Click);
             // 
-            // startDate
-            // 
-            this.startDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startDate.EditValue = null;
-            this.startDate.Location = new System.Drawing.Point(3, 47);
-            this.startDate.Name = "startDate";
-            this.startDate.Properties.AutoHeight = false;
-            this.startDate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.startDate.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.startDate.Size = new System.Drawing.Size(265, 39);
-            this.startDate.TabIndex = 2;
-            // 
-            // endDate
-            // 
-            this.endDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.endDate.EditValue = null;
-            this.endDate.Location = new System.Drawing.Point(274, 47);
-            this.endDate.Name = "endDate";
-            this.endDate.Properties.AutoHeight = false;
-            this.endDate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.endDate.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.endDate.Size = new System.Drawing.Size(265, 39);
-            this.endDate.TabIndex = 3;
-            // 
             // frmWorkerReport
             // 
             this.Appearance.Options.UseFont = true;
@@ -179,16 +179,16 @@ namespace Pracrice_7_8.Forms
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Name = "frmWorkerReport";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmWorkerReport";
+            this.Text = "Отчет по сотруднику";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboBox.Properties)).EndInit();
-            this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.treeList1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.startDate.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.startDate.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.endDate.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.endDate.Properties)).EndInit();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.treeList1)).EndInit();
             this.ResumeLayout(false);
 
         }

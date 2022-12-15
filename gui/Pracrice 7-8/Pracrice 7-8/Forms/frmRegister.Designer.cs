@@ -117,6 +117,7 @@ namespace Pracrice_7_8.Forms
             this.passwordText.Properties.Appearance.Options.UseFont = true;
             this.passwordText.Properties.AutoHeight = false;
             this.passwordText.Properties.NullValuePrompt = "Пароль";
+            this.passwordText.Properties.PasswordChar = '*';
             this.passwordText.Size = new System.Drawing.Size(194, 32);
             this.passwordText.TabIndex = 2;
             // 
@@ -212,7 +213,7 @@ namespace Pracrice_7_8.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "frmRegister";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmRegister";
+            this.Text = "Зарегистрировать сотрудника";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.loginText.Properties)).EndInit();

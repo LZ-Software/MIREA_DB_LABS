@@ -11,9 +11,6 @@ namespace Pracrice_7_8
         {
             InitializeComponent();
             this.Icon = Properties.Resources.appIcon;
-
-            this.loginText.Text = "manager1";
-            this.passwordText.Text = "f6$*86%^&*$fgyu^*&^*%!";
         }
 
         private void authButton_Click(object sender, EventArgs e)
