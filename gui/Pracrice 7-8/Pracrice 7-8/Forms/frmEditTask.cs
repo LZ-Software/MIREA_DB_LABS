@@ -1,26 +1,26 @@
-﻿/*using DevExpress.XtraEditors;*/
-using Npgsql;
+﻿using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Pracrice_7_8.Forms
 {
     public partial class frmEditTask : DevExpress.XtraEditors.XtraForm
     {
-        private int id;
+        private int task_id;
+        private int contract_id;
 
-        public frmEditTask(string role, int id)
+        private Dictionary<string, int> executors = new Dictionary<string, int>();
+        private Dictionary<string, int> clients = new Dictionary<string, int>();
+        private Dictionary<string, int> types = new Dictionary<string, int>();
+
+        public frmEditTask(int task_id, int contract_id)
         {
             InitializeComponent();
 
-            this.id = id;
+            this.task_id = task_id;
+            this.contract_id = contract_id;
         }
 
         private void loadExecutor(ComboBox comboBox)
@@ -31,6 +31,7 @@ namespace Pracrice_7_8.Forms
             cmd.Connection = connection;
 
             cmd.CommandText = "SELECT " +
+                "ul.id as id, " +
                 "ul.username as username " +
                 "FROM user_login ul " +
                 "JOIN person_role pr ON pr.id = ul.id " +
@@ -43,8 +44,10 @@ namespace Pracrice_7_8.Forms
                 {
                     while (reader.Read())
                     {
+                        int id = reader.GetInt32(reader.GetOrdinal("id"));
                         string name = reader.GetString(reader.GetOrdinal("username"));
                         comboBox.Items.Add(name);
+                        this.executors.Add(name, id);
                     }
                 }
                 else
@@ -62,6 +65,7 @@ namespace Pracrice_7_8.Forms
             cmd.Connection = connection;
 
             cmd.CommandText = "SELECT " +
+                "ul.id as id, " +
                 "ul.username as username " +
                 "FROM user_login ul " +
                 "JOIN person_role pr ON pr.id = ul.id " +
@@ -74,8 +78,10 @@ namespace Pracrice_7_8.Forms
                 {
                     while (reader.Read())
                     {
+                        int id = reader.GetInt32(reader.GetOrdinal("id"));
                         string name = reader.GetString(reader.GetOrdinal("username"));
                         comboBox.Items.Add(name);
+                        this.clients.Add(name, id);
                     }
                 }
                 else
@@ -92,7 +98,7 @@ namespace Pracrice_7_8.Forms
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = connection;
 
-            cmd.CommandText = "SELECT title FROM task_type";
+            cmd.CommandText = "SELECT id, title FROM task_type";
 
             using (NpgsqlDataReader reader = cmd.ExecuteReader())
             {
@@ -100,8 +106,10 @@ namespace Pracrice_7_8.Forms
                 {
                     while (reader.Read())
                     {
+                        int id = reader.GetInt32(reader.GetOrdinal("id"));
                         string name = reader.GetString(reader.GetOrdinal("title"));
                         comboBox.Items.Add(name);
+                        this.types.Add(name, id);
                     }
                 }
                 else
@@ -143,12 +151,13 @@ namespace Pracrice_7_8.Forms
 
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = connection;
-            cmd.Parameters.AddWithValue(id);
+            cmd.Parameters.AddWithValue(this.task_id);
 
             cmd.CommandText = "SELECT " +
                 "contact.username as Клиент," + // +
                 "author.username as Автор," + // +
                 "executor.username as Исполнитель," + // +
+                "cont.id as Конт_ИД," + // +
                 "cont.extra_data as Инфо," + // +
                 "t.title as Тип," + // +
                 "tsk.priority as Приоритет," + // +
@@ -175,6 +184,14 @@ namespace Pracrice_7_8.Forms
                         string client = reader.GetString(reader.GetOrdinal("Клиент"));
                         string priority = reader.GetString(reader.GetOrdinal("Приоритет"));
                         string type = reader.GetString(reader.GetOrdinal("Тип"));
+                        if (reader.IsDBNull(reader.GetOrdinal("Конт_ИД")))
+                        {
+                            this.contract_id = -1;
+                        }
+                        else
+                        {
+                            this.contract_id = reader.GetInt32(reader.GetOrdinal("Конт_ИД"));
+                        }
                         string info;
                         if(reader.IsDBNull(reader.GetOrdinal("Инфо")))
                         {
@@ -209,6 +226,7 @@ namespace Pracrice_7_8.Forms
                         authorLabel.Dock = DockStyle.Fill;
                         authorLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         TextBox authorTextbox = new TextBox();
+                        authorTextbox.Name = "authorTextbox";
                         authorTextbox.Text = author;
                         authorTextbox.ReadOnly = true;
                         authorTextbox.Dock = DockStyle.Fill;
@@ -220,6 +238,7 @@ namespace Pracrice_7_8.Forms
                         executorLabel.Dock = DockStyle.Fill;
                         executorLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         ComboBox executorCombobox = new ComboBox();
+                        executorCombobox.Name = "executorCombobox";
                         loadExecutor(executorCombobox);
                         executorCombobox.SelectedItem = executor;
                         executorCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -232,6 +251,7 @@ namespace Pracrice_7_8.Forms
                         clientLabel.Dock = DockStyle.Fill;
                         clientLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         ComboBox clientCombobox = new ComboBox();
+                        clientCombobox.Name = "clientCombobox";
                         loadClient(clientCombobox);
                         clientCombobox.SelectedItem = client;
                         clientCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -244,6 +264,7 @@ namespace Pracrice_7_8.Forms
                         priorityLabel.Dock = DockStyle.Fill;
                         priorityLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         ComboBox priorityCombobox = new ComboBox();
+                        priorityCombobox.Name = "priorityCombobox";
                         loadPriority(priorityCombobox);
                         priorityCombobox.SelectedItem = priority;
                         priorityCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -256,6 +277,7 @@ namespace Pracrice_7_8.Forms
                         typeLabel.Dock = DockStyle.Fill;
                         typeLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         ComboBox typeCombobox = new ComboBox();
+                        typeCombobox.Name = "typeCombobox";
                         loadType(typeCombobox);
                         typeCombobox.Text = type;
                         typeCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -268,6 +290,7 @@ namespace Pracrice_7_8.Forms
                         infoLabel.Dock = DockStyle.Fill;
                         infoLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         RichTextBox infoTextbox = new RichTextBox();
+                        infoTextbox.Name = "infoTextbox";
                         infoTextbox.Text = info;
                         infoTextbox.WordWrap = true;
                         infoTextbox.Dock = DockStyle.Fill;
@@ -279,6 +302,7 @@ namespace Pracrice_7_8.Forms
                         problemLabel.Dock = DockStyle.Fill;
                         problemLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         TextBox problemTextbox = new TextBox();
+                        problemTextbox.Name = "problemTextbox";
                         problemTextbox.Text = problem;
                         problemTextbox.Dock = DockStyle.Fill;
                         problemTextbox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -290,6 +314,8 @@ namespace Pracrice_7_8.Forms
                         createdLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         DateTimePicker createdDateTimePicker = new DateTimePicker();
                         createdDateTimePicker.Value = created;
+                        createdDateTimePicker.Name = "createdDateTimePicker";
+                        createdDateTimePicker.Enabled = false;
                         createdDateTimePicker.Dock = DockStyle.Fill;
                         createdDateTimePicker.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
@@ -302,13 +328,15 @@ namespace Pracrice_7_8.Forms
                         TextBox finishedTextbox = new TextBox();
                         if (finished)
                         {
-                            
+                            finishedDateTimePicker.Name = "finishedDateTimePicker";
                             finishedDateTimePicker.Value = finishedDateTime;
                             finishedDateTimePicker.Dock = DockStyle.Fill;
+                            finishedDateTimePicker.Enabled = false;
                             finishedDateTimePicker.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         }
                         else
                         {
+                            finishedTextbox.Name = "finishedTextbox";
                             finishedTextbox.Text = "";
                             finishedTextbox.ReadOnly = true;
                             finishedTextbox.Dock = DockStyle.Fill;
@@ -322,6 +350,7 @@ namespace Pracrice_7_8.Forms
                         deadlineLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
                         DateTimePicker deadlineDateTimePicker = new DateTimePicker();
                         deadlineDateTimePicker.Value = deadline;
+                        deadlineDateTimePicker.Name = "deadlineDateTimePicker";
                         deadlineDateTimePicker.Dock = DockStyle.Fill;
                         deadlineDateTimePicker.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
@@ -366,9 +395,162 @@ namespace Pracrice_7_8.Forms
             loadTable();
         }
 
-        private void simpleButton1_Click(object sender, EventArgs e)
+        private void finishButton_Click(object sender, EventArgs e)
         {
+            NpgsqlConnection connection = DBUtils.GetDBConnection();
 
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = connection;
+
+            cmd.CommandText = "UPDATE tasks SET dt_finished = now()::timestamp WHERE id = $1";
+
+            cmd.Parameters.AddWithValue(this.task_id);
+
+            if (cmd.ExecuteNonQuery() == 1)
+            {
+                MessageBox.Show("Задача закрыта.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Что-то отрыгнуло.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            connection.Dispose();
+            connection.Close();
+
+            this.Close();
+        }
+
+        private void changeTaskButton_Click(object sender, EventArgs e)
+        {
+            NpgsqlConnection connection = DBUtils.GetDBConnection();
+            NpgsqlTransaction transaction = connection.BeginTransaction();
+
+            TableLayoutPanel table = (TableLayoutPanel) this.Controls.Find("table", false).FirstOrDefault();
+
+            string data = ((RichTextBox) table.Controls.Find("infoTextbox", false).FirstOrDefault()).Text; // contract text
+
+            NpgsqlCommand cmd1 = new NpgsqlCommand();
+            cmd1.Connection = connection;
+            cmd1.Transaction = transaction;
+
+            if (this.contract_id == -1 && data.Length > 0) // Контракта не было, а теперь есть
+            {
+                cmd1.CommandText = "INSERT INTO contracts (extra_data) VALUES ($1::jsonb) RETURNING id";
+                cmd1.Parameters.AddWithValue(data);
+
+                try
+                {
+                    this.contract_id = (int) cmd1.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Не удалось добавить контракт.\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    transaction.Rollback();
+                    transaction.Dispose();
+                    return;
+                }
+            }
+            else if (this.contract_id == -1 && data.Length == 0) // Контракта не было и нет
+            {
+                this.contract_id = -1;
+            }
+            else if (this.contract_id != 1 && data.Length == 0) // Контракт был, а теперь нет
+            {
+                cmd1.CommandText = "DELETE FROM contracts WHERE id = $1";
+                cmd1.Parameters.AddWithValue(this.contract_id);
+
+                try
+                {
+                    if (cmd1.ExecuteNonQuery() == -1)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        this.contract_id = -1;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Не удалось удалить контракт.\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    transaction.Rollback();
+                    transaction.Dispose();
+                    return;
+                }
+            }
+            else if (this.contract_id != 1 && data.Length > 0) // Контракт был и есть
+            {
+                cmd1.CommandText = "UPDATE contracts SET extra_data = (($1)::jsonb) WHERE id = $2";
+                cmd1.Parameters.AddWithValue(data);
+                cmd1.Parameters.AddWithValue(this.contract_id);
+
+                if (cmd1.ExecuteNonQuery() == -1)
+                {
+                    MessageBox.Show("Не удалось обновить контракт.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    transaction.Rollback();
+                    transaction.Dispose();
+                    return;
+                }
+            }
+
+            NpgsqlCommand cmd2 = new NpgsqlCommand(
+                "UPDATE tasks SET " +
+                    "contact_id = $1, " +
+                    "executor_id = $2, " +
+                    "contract_id = $3, " +
+                    "task_type_id = $4, " +
+                    "priority = $5::priority_enum, " +
+                    "data = $6, " +
+                    "dt_deadline = $7 " +
+                "WHERE id = $8",
+                connection,
+                transaction);
+
+            object cont_id;
+            if (this.contract_id == -1)
+            {
+                cont_id = DBNull.Value;
+            }
+            else
+            {
+                cont_id = this.contract_id;
+            }
+
+            string problem_text = ((TextBox)table.Controls.Find("problemTextbox", false).FirstOrDefault()).Text;
+            object prblm;
+            if (problem_text.Length == 0)
+            {
+                prblm = DBNull.Value;
+            }
+            else
+            {
+                prblm = problem_text;
+            }
+
+            cmd2.Parameters.AddWithValue(this.clients[((ComboBox) table.Controls.Find("clientCombobox", false).FirstOrDefault()).SelectedItem.ToString()]); // contact_id
+            cmd2.Parameters.AddWithValue(this.executors[((ComboBox) table.Controls.Find("executorCombobox", false).FirstOrDefault()).SelectedItem.ToString()]); // executor_id
+            cmd2.Parameters.AddWithValue(cont_id); // contract_id
+            cmd2.Parameters.AddWithValue(this.types[((ComboBox) table.Controls.Find("typeCombobox", false).FirstOrDefault()).SelectedItem.ToString()]); // task_type_id
+            cmd2.Parameters.AddWithValue(((ComboBox) table.Controls.Find("priorityCombobox", false).FirstOrDefault()).SelectedItem.ToString()); // priority
+            cmd2.Parameters.AddWithValue(prblm); // data
+            cmd2.Parameters.AddWithValue(((DateTimePicker) table.Controls.Find("deadlineDateTimePicker", false).FirstOrDefault()).Value); // dt_deadline
+            cmd2.Parameters.AddWithValue(this.task_id);
+
+            if (cmd2.ExecuteNonQuery() != -1)
+            {
+                transaction.Commit();
+                MessageBox.Show("Задача обновлена.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Задача не обновлена.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                transaction.Rollback();
+                transaction.Dispose();
+                return;
+            }
+            
+            this.Close();
         }
     }
 }

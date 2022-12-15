@@ -1,18 +1,10 @@
 ﻿using DevExpress.XtraEditors;
-using DevExpress.XtraEditors.Controls;
-using DevExpress.XtraEditors.Repository;
-using DevExpress.XtraGrid.Columns;
 using Npgsql;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Pracrice_7_8.Forms;
 
 namespace Pracrice_7_8.Forms
 {
@@ -80,8 +72,7 @@ namespace Pracrice_7_8.Forms
 
         private void loadTable()
         {
-            this.dataGridView1.Rows.Clear();
-            this.dataGridView1.Refresh();
+            this.Refresh();
 
             NpgsqlConnection connection = DBUtils.GetDBConnection();
 
@@ -101,23 +92,28 @@ namespace Pracrice_7_8.Forms
                 "JOIN task_type t ON tsk.task_type_id = t.id";
 
             NpgsqlDataReader reader = cmd_tasks.ExecuteReader();
+
             if (reader.HasRows)
             {
                 DataTable dt = new DataTable();
                 dt.Load(reader);
                 dataGridView1.DataSource = dt;
             }
+
             connection.Dispose();
             connection.Close();
 
             dataGridView1.Columns["ID"].Width = 20;
             dataGridView1.Columns["Контракт"].Width = 65;
+
             DataGridViewButtonColumn buttonEdit = new DataGridViewButtonColumn();
             buttonEdit.Name = "buttonEdit";
             buttonEdit.HeaderText = "Изменить";
             buttonEdit.FlatStyle = FlatStyle.Flat;
             buttonEdit.DefaultCellStyle.BackColor = Color.FromArgb(68, 68, 68);
             dataGridView1.Columns.Add(buttonEdit);
+
+            dataGridView1.Sort(dataGridView1.Columns["ID"], ListSortDirection.Descending);
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -155,13 +151,15 @@ namespace Pracrice_7_8.Forms
             {
                 if(dataGridView1.CurrentRow.Cells[4].Value.ToString() != "")
                 {
-                    frmEditTask editTask = new frmEditTask(role, (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value);
+                    frmEditTask editTask = new frmEditTask((int) dataGridView1.Rows[e.RowIndex].Cells["ID"].Value, (int) dataGridView1.CurrentRow.Cells[4].Value);
                     editTask.ShowDialog();
+                    loadTable();
                 }
                 else
                 {
-                    frmEditTask editTask = new frmEditTask(role, -1);
+                    frmEditTask editTask = new frmEditTask((int) dataGridView1.Rows[e.RowIndex].Cells["ID"].Value, - 1);
                     editTask.ShowDialog();
+                    loadTable();
                 }
             }
         }

@@ -1,14 +1,7 @@
-﻿/*using DevExpress.XtraEditors;*/
-using Newtonsoft.Json.Linq;
-using Npgsql;
+﻿using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Pracrice_7_8.Forms
@@ -252,7 +245,7 @@ namespace Pracrice_7_8.Forms
             loadTable();
         }
 
-        private void simpleButton1_Click(object sender, EventArgs e)
+        private void addTaskButton_Click(object sender, EventArgs e)
         {
             NpgsqlConnection connection = DBUtils.GetDBConnection();
             NpgsqlTransaction transaction = connection.BeginTransaction();
