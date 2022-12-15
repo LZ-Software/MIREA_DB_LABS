@@ -161,6 +161,7 @@ namespace Pracrice_7_8.Forms
             this.createReportButton.Size = new System.Drawing.Size(206, 47);
             this.createReportButton.TabIndex = 2;
             this.createReportButton.Text = "Сформировать отчет";
+            this.createReportButton.Click += new System.EventHandler(this.createReportButton_Click);
             // 
             // employeeReportButton
             // 

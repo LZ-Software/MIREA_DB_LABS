@@ -194,5 +194,11 @@ namespace Pracrice_7_8.Forms
             frmWorkerReport workerReport = new frmWorkerReport();
             workerReport.ShowDialog();
         }
+
+        private void createReportButton_Click(object sender, EventArgs e)
+        {
+            frmReport frmReport = new frmReport();
+            frmReport.ShowDialog();
+        }
     }
 }
