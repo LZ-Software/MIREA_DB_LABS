@@ -18,6 +18,8 @@ namespace Pracrice_7_8.Forms
         {
             InitializeComponent();
 
+            this.Icon = Properties.Resources.appIcon;
+
             this.login = login;
         }
 
