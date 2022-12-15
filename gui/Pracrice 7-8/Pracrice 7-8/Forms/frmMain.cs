@@ -24,6 +24,8 @@ namespace Pracrice_7_8.Forms
         public frmMain(string role, string login)
         {
             InitializeComponent();
+
+            this.Icon = Properties.Resources.appIcon;
             this.role = role;
             this.login = login;
             if (role != "Администратор") loadButtons();
@@ -151,8 +153,16 @@ namespace Pracrice_7_8.Forms
         {
             if (dataGridView1.Columns[e.ColumnIndex].Name == "buttonEdit")
             {
-                frmEditTask editTask = new frmEditTask(role, (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value);
-                editTask.ShowDialog();
+                if(dataGridView1.CurrentRow.Cells[4].Value.ToString() != "")
+                {
+                    frmEditTask editTask = new frmEditTask(role, (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value);
+                    editTask.ShowDialog();
+                }
+                else
+                {
+                    frmEditTask editTask = new frmEditTask(role, -1);
+                    editTask.ShowDialog();
+                }
             }
         }
 
@@ -178,6 +188,12 @@ namespace Pracrice_7_8.Forms
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void employeeReportButton_Click(object sender, EventArgs e)
+        {
+            frmWorkerReport workerReport = new frmWorkerReport();
+            workerReport.ShowDialog();
         }
     }
 }
