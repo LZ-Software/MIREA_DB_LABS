@@ -71,24 +71,12 @@ BEGIN
 END $body$
 LANGUAGE plpgsql;
 
-
-SELECT * FROM create_report(get_person_id_by_login('worker1'), (current_date - INTERVAL '23 days')::DATE, (current_date + INTERVAL '2 days')::DATE);
-
-SELECT * FROM create_tasks_report((current_date - INTERVAL '23 days')::DATE, (current_date + INTERVAL '2 days')::DATE);
-
-SELECT id, dt_created, dt_finished, dt_deadline FROM tasks WHERE executor_id = get_person_id_by_login('worker1');
-
-DROP FUNCTION create_report(worker INTEGER, start_date DATE, end_date DATE);
-
-\copy (SELECT * FROM create_report(get_person_id_by_login('worker1'), (current_date - INTERVAL '23 days')::DATE, (current_date)::DATE)) TO '/home/plmr0/kek.csv' DELIMITER ',' CSV HEADER
-
 CREATE OR REPLACE PROCEDURE generate_json_report()
 AS $$ BEGIN
     EXECUTE format('');
     COPY (SELECT to_jsonb(json_agg(json_tasks)) FROM (SELECT * FROM tasks) as json_tasks) TO 'C:/Users/Public/report.json';
 END;
 $$ LANGUAGE plpgsql;
-
 
 CREATE OR REPLACE PROCEDURE generate_report(path TEXT)
 AS $$ DECLARE
@@ -104,9 +92,6 @@ EXECUTE statement;
 RETURN;
 END; $$
 LANGUAGE plpgsql;
-
-CALL generate_report('C:/Users/Public/report.json');
-
 
 CREATE OR REPLACE FUNCTION find_client(word_1 VARCHAR(50))
 RETURNS TABLE (
@@ -138,10 +123,6 @@ BEGIN
 END;
 $body$ LANGUAGE plpgsql;
 
-SELECT * FROM find_client('kyra.conn@gmail.com');
-
-DROP FUNCTION find_client(word_1 VARCHAR(50));
-
 CREATE OR REPLACE PROCEDURE create_worker(login VARCHAR(128), password_text VARCHAR(256), name VARCHAR(128), last_name_text VARCHAR(128), role VARCHAR(20), email VARCHAR(128), phone VARCHAR(128), address VARCHAR(128))
 AS $$
 DECLARE
@@ -170,7 +151,3 @@ BEGIN
     END IF;
 END;
 $$LANGUAGE plpgsql;
-
-DROP PROCEDURE create_worker(login varchar, password_text varchar, name varchar, last_name_text varchar, role varchar, email varchar, phone varchar, address varchar);
-
-CALL create_worker('worker7', '1232343456', 'Никита', 'Гвозьд', 'Сотрудник', 'gvozd@gmail.com', '+2282286965', 'улица Пивная 11');
