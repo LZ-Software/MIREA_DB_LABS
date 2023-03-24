@@ -11,7 +11,7 @@ WITH flights AS (
     WHERE f.departure_airport IN (SELECT airport_code FROM airports_data WHERE city->>'ru' = 'Санкт-Петербург') AND
           f.arrival_airport IN (SELECT airport_code FROM airports_data WHERE city->>'ru' = 'Москва')
     GROUP BY f.flight_no, f.flight_id)
-SELECT ROUND(AVG(passengers)) FROM flights;
+SELECT ROUND(AVG(passengers)) AS average FROM flights;
 
 -- Задание 3
 SELECT ad.model->>'en' AS aircraft FROM seats s
