@@ -1,0 +1,612 @@
+// --------------- Категории (название категории) ---------------
+db.createCollection(
+    "categories", {
+        validator: {
+            $jsonSchema: {
+                bsonType: "object",
+                title: "Category validation",
+                required: [
+                    "name"
+                ],
+                properties: {
+                    name: {
+                        bsonType: "string"
+                    }
+                }
+            }
+        }
+    }
+)
+
+// --------------- Товары (название, количество, цена, производитель) ---------------
+db.createCollection(
+    "games", {
+        validator: {
+            $jsonSchema: {
+                bsonType:"object",
+                title: "Game validation",
+                required: [
+                    "name",
+                    "price",
+                    "publisher",
+                    "categories"
+                ],
+                properties: {
+                    name: {
+                        bsonType:"string"
+                    },
+                    price: {
+                        bsonType: "int"
+                    },
+                    publisher: {
+                        bsonType: "string"
+                    },
+                    categories: {
+                        bsonType: "array",
+                        items: {
+                            required: [
+                                "category"
+                            ],
+                            properties: {
+                                category: {
+                                    bsonType: "objectId"
+                                }
+                            }
+                        }
+                    },
+                }
+            }
+        }
+    }
+)
+
+// --------------- Работники и клиенты (имена и т.д.) ---------------
+db.createCollection(
+    "workers", {
+        validator: {
+            $jsonSchema: {
+                bsonType: "object",
+                title: "Worker validation",
+                required: [
+                    "name",
+                    "phone",
+                    "email",
+                    "position",
+                ],
+                properties: {
+                    name: {
+                        bsonType: "string"
+                    },
+                    position: {
+                        bsonType: "string"
+                    },
+                    phone: {
+                        bsonType: "string"
+                    },
+                    email: {
+                        bsonType: "string"
+                    }
+                }
+            }
+        }
+    }
+)
+db.createCollection(
+    "clients", {
+        validator: {
+            $jsonSchema: {
+                bsonType: "object",
+                title: "Client validation",
+                required: [
+                    "nickname",
+                    "email"
+                ],
+                properties: {
+                    nickname: {
+                        bsonType: "string"
+                    },
+                    email: {
+                        bsonType: "string"
+                    }
+                }
+            }
+        }
+    }
+)
+
+// --------------- Заказы (статус, дата) ---------------
+db.createCollection(
+    "orders", {
+        validator: {
+            $jsonSchema: {
+                bsonType: "object",
+                title: "Order validation",
+                required: [
+                    "client",
+                    "games",
+                    "date",
+                    "status"
+                ],
+                properties: {
+                    client: {
+                        bsonType: "objectId"
+                    },
+                    games: {
+                        bsonType: "array",
+                        items: {
+                            required: [
+                                "game"
+                            ],
+                            properties: {
+                                game: {
+                                    bsonType: "objectId"
+                                }
+                            }
+                        }
+                    },
+                    date: {
+                        bsonType: "date"
+                    },
+                    status: {
+                        bsonType: "bool"
+                    }
+                }
+            }
+        }
+    }
+)
+
+// --------------- Заполнение данными ---------------
+
+db.categories.insertMany([
+    {
+        "name": "Шутер"
+    },
+    {
+        "name": "Приключение"
+    },
+    {
+        "name": "Хоррор"
+    },
+    {
+        "name": "Файтинг"
+    },
+    {
+        "name": "Фентези"
+    },
+    {
+        "name": "Гонки"
+    },
+    {
+        "name": "Головоломки"
+    },
+    {
+        "name": "Детектив"
+    },
+    {
+        "name": "Аниме"
+    },
+    {
+        "name": "Симулятор"
+    },
+    {
+        "name": "Экшн"
+    }
+])
+db.clients.insertMany([
+    {
+        "nickname": "tawer228",
+        "email": "tawer228@ya.ru"
+    },
+    {
+        "nickname": "keka564",
+        "email": "fgh3@gmail.com"
+    },
+    {
+        "nickname": "gus",
+        "email": "gusein22@bk.com"
+    },
+    {
+        "nickname": "walter1",
+        "email": "ww563@gmail.com"
+    },
+    {
+        "nickname": "baltika7",
+        "email": "pivolublu@mail.ru"
+    }
+])
+db.workers.insertMany([
+    {
+        "name": "Жыксамонов Акылбек",
+        "phone": "+79037484847",
+        "email": "zhick_a@gmail.com",
+        "position": "Старший модератор"
+    },
+    {
+        "name": "Иванов Иван",
+        "phone": "+79154862915",
+        "email": "ivaaaaaaaaaaan@ya.ru",
+        "position": "Модератор"
+    },
+    {
+        "name": "Зауров Владислав",
+        "phone": "+79037583916",
+        "email": "vlad1ck_z@gmail.com",
+        "position": "Разработчик"
+    },
+])
+db.games.insertMany([
+    {
+        "name": "Rocket League",
+        "price": 0,
+        "publisher": "Epic Games",
+        "categories": [
+            {
+                "category": db.categories.findOne({"name": "Гонки"})["_id"],
+            }
+        ]
+    },
+    {
+        "name": "Battlefield 5",
+        "price": 2499,
+        "publisher": "EA",
+        "categories": [
+            {
+                "category": db.categories.findOne({"name": "Шутер"})["_id"],
+            }
+        ]
+    },
+    {
+        "name": "Uncharted 4",
+        "price": 2999,
+        "publisher": "Sony",
+        "categories": [
+            {
+                "category": db.categories.findOne({"name": "Экшн"})["_id"],
+            },
+            {
+                "category": db.categories.findOne({"name": "Шутер"})["_id"],
+            },
+            {
+                "category": db.categories.findOne({"name": "Приключение"})["_id"],
+            }
+        ]
+    },
+    {
+        "name": "Resident Evil Village",
+        "price": 1499,
+        "publisher": "Capcom",
+        "categories": [
+            {
+                "category": db.categories.findOne({"name": "Хоррор"})["_id"],
+            },
+            {
+                "category": db.categories.findOne({"name": "Приключение"})["_id"],
+            }
+        ]
+    },
+    {
+        "name": "Assetto Corsa",
+        "price": 799,
+        "publisher": "Kunos Simulazioni",
+        "categories": [
+            {
+                "category": db.categories.findOne({"name": "Гонки"})["_id"]
+            },
+            {
+                "category": db.categories.findOne({"name": "Симулятор"})["_id"]
+            }
+        ]
+    }
+])
+db.orders.insertMany([
+    {
+        "client": db.clients.findOne({"email": "gusein22@bk.com"})["_id"],
+        "games": [
+            {
+                "game": db.games.findOne({"name": "Resident Evil Village"})["_id"]
+            }
+        ],
+        "date": new ISODate(),
+        "status": true,
+    },
+    {
+        "client": db.clients.findOne({"email": "tawer228@ya.ru"})["_id"],
+        "games": [
+            {
+                "game": db.games.findOne({"name": "Rocket League"})["_id"]
+            }
+        ],
+        "date": new ISODate(),
+        "status": true,
+    },
+    {
+        "client": db.clients.findOne({"email": "pivolublu@mail.ru"})["_id"],
+        "games": [
+            {
+                "game": db.games.findOne({"name": "Battlefield 5"})["_id"]
+            }
+        ],
+        "date": new ISODate(),
+        "status": false,
+    },
+    {
+        "client": db.clients.findOne({"email": "ww563@gmail.com"})["_id"],
+        "games": [
+            {
+                "game": db.games.findOne({"name": "Assetto Corsa"})["_id"]
+            }
+        ],
+        "date": new ISODate(),
+        "status": true,
+    },
+    {
+        "client": db.clients.findOne({"email": "fgh3@gmail.com"})["_id"],
+        "games": [
+            {
+                "game": db.games.findOne({"name": "Uncharted 4"})["_id"]
+            }
+        ],
+        "date": new ISODate(),
+        "status": true,
+    },
+])
+
+// --------------- Запросы к БД ---------------
+
+// 1. Получение списка всех категорий
+db.categories.find()
+
+// 2. Получение списка всех продуктов в категории
+db.games.find({"categories.category": db.categories.findOne({name: "Гонки"})["_id"]})
+
+// 3. Поиск игры по названию
+db.games.findOne({"name": "Rocket League"})
+
+// 4. Добавление продукта в корзину клиента
+db.orders.insertOne(
+{
+        "client": db.clients.findOne({"email": "pivolublu@mail.ru"})["_id"],
+        "games": [
+            {
+                "game": db.games.findOne({"name": "Assetto Corsa"})["_id"]
+            }
+        ],
+        "date": new ISODate(),
+        "status": false,
+})
+
+// 5. Получение списка всех заказов клиента
+db.orders.find({"client": db.clients.findOne({"email": "pivolublu@mail.ru"})["_id"]})
+
+// 6. Обновление статуса заказа
+db.orders.updateOne({"_id": ObjectId("647b8163d9ca604b34de0474")}, {"$set": {"status": true}})
+
+// 7. Получение списка топ-продаж за последние месяцы с учетом цены и количества проданных товаров
+db.orders.aggregate([
+   {
+      $match: {
+        date: {
+            $gte: new ISODate('2023-06-03')
+        }
+      }
+   },
+   {
+      $unwind: "$games"
+   },
+   {
+      $lookup:
+         {
+            from: "games",
+            localField: "games.game",
+            foreignField: "_id",
+            as: "games"
+         }
+   },
+   {
+      $unwind: "$games"
+   },
+   {
+      $group:
+        {
+           _id: "$games.name",
+           total_sum: {
+               $sum: "$games.price"
+           },
+        }
+   },
+   {
+      $sort: {
+        total_sum: -1
+      }
+   }
+])
+
+// 8. Получение списка клиентов, которые сделали более чем N(1) покупок в последнее время.
+db.orders.aggregate([
+   {
+      $match: {
+        date: {
+            $gte: new ISODate('2023-06-01')
+        }
+      }
+   },
+   {
+      $lookup:
+         {
+            from: "clients",
+            localField: "client",
+            foreignField: "_id",
+            as: "clients"
+         }
+   },
+   {
+      $group:
+        {
+           _id: "$clients._id",
+           orders_count: {
+               $count: {}
+           }
+        }
+   },
+   {
+    $match: {
+        orders_count: {
+            $gt: 1
+        }
+    }
+   },
+   {
+      $sort: {
+        orders_count: -1
+      }
+   }
+])
+
+// 9. Получите какие категории товаров пользовались спросом в заданный срок
+db.orders.aggregate(
+   {
+      $match: {
+        date: {
+            $gte: new ISODate('2023-06-01'),
+            $lte: new ISODate('2023-06-05')
+        }
+      }
+   },
+   {
+      $unwind: "$games"
+   },
+   {
+        $lookup: {
+            from: "games",
+            localField: "games.game",
+            foreignField: "_id",
+            as: "game"
+        }
+   },
+   {
+      $unwind: "$games"
+   },
+   {
+      $lookup:
+      {
+        from: "categories",
+        localField: "game.category",
+        foreignField: "_id",
+        as: "categories"
+      }
+   },
+   {
+      $group:
+        {
+           _id: "$categories.name"
+        }
+   }
+)
+
+// 10. Какие товары не были проданы в какую-то дату
+db.orders.aggregate(
+    {
+      $match: {
+        date: {
+            $gte: new ISODate('2023-06-01'),
+            $lte: new ISODate('2023-06-05')
+        }
+      }
+   },
+   {
+      $unwind: "$games"
+   },
+   {
+        $lookup: {
+            from: "games",
+            localField: "game",
+            foreignField: "_id",
+            as: "games"
+        }
+   },
+   {
+      $unwind: "$games"
+   },
+   {
+      $unset: "games"
+   }
+)
+
+// --------------- Создание пользователей ---------------
+
+// Роль администратора
+db.createRole({
+    role: "admin",
+    privileges: [
+        {
+            resource: {db: "mirea", collection: "categories"},
+            actions: ["find", "insert", "update", "remove"]
+        },
+        {
+            resource: {db: "mirea", collection: "games"},
+            actions: ["find", "insert", "update", "remove"]
+        },
+        {
+            resource: {db: "mirea", collection: "workers"},
+            actions: ["find", "insert", "update", "remove"]
+        },
+        {
+            resource: {db: "mirea", collection: "clients"},
+            actions: ["find", "insert", "update", "remove"]
+        },
+        {
+            resource: {db: "mirea", collection: "orders"},
+            actions: ["find", "insert", "update", "remove"]
+        }
+    ],
+    roles: []
+})
+
+// Роль менеджера
+db.createRole({
+    role: "manager",
+    privileges: [
+        {
+            resource: {db: "mirea", collection: "categories"},
+            actions: ["find", "insert", "update", "remove"]
+        },
+        {
+            resource: {db: "mirea", collection: "games"},
+            actions: ["find", "insert", "update", "remove"]
+        },
+        {
+            resource: {db: "mirea", collection: "orders"},
+            actions: ["find", "insert", "update", "remove"]
+        }
+    ],
+    roles: []
+})
+
+// Роль пользователя
+db.createRole({
+    role: "user",
+    privileges: [
+        {
+            resource: {db: "mirea", collection: "games"},
+            actions: ["find"]
+        },
+        {
+            resource: {db: "mirea", collection: "orders"},
+            actions: ["find", "insert"]
+        }
+    ],
+    roles: []
+})
+
+// Роль гостя
+db.createRole({
+    role: "guest",
+    privileges: [
+        {
+            resource: {db: "mirea", collection: "games"},
+            actions: ["find"]
+        },
+    ],
+    roles: []
+})
